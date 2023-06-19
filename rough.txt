@@ -1,0 +1,14 @@
+
+count(n, m, M) = # of non-negative numbers <= n, whose digits lie in the range [m, M]
+
+To find the count function we can iterate over the digits of n;
+
+Say we are the i-th digit from the left where we have 2 choices.
+1. Either to select a digit less than d[i]
+
+    - In this case we have all the options from [m, min(M, d[i] - 1)]
+    - Since we have selected a smaller digit remaining positions can be filled by any digit in the range [m, M]
+
+2. Or we can simply select d[i] and look for possibilities in the remainig digit;
+
+If we see this count will also include those numbers which won't have digits m and M together, where all the digits are either in ther range [m+1, M] or [m, M-1]
