@@ -29,12 +29,45 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  int n, m;
+  cin >> n >> m;
+  vector<vector<int>> adj(n);
+  vector<int> inorder(n);
+  for (int i = 0; i < m; ++i) {
+    int u, v;
+    cin >> u >> v;
+    u--, v--;
+    adj[u].push_back(v);
+    inorder[v]++;
+  }
+
+  queue<int> q;
+  for (int i = 0; i < n; ++i) {
+    if (inorder[i] == 0) q.push(i);
+  }
+  vector<int> order;
+  while (!q.empty()) {
+    int u = q.front();
+    order.push_back(u);
+    q.pop();
+    for (int it : adj[u]) {
+      inorder[it]--;
+      if (inorder[it] == 0) q.push(it);
+    }
+  }
+  if (order.size() != n) {
+    cout << "IMPOSSIBLE" << endl;
+    return;
+  }
+  for (int i : order) cout << i + 1 << " ";
+  cout << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
+  // cin >> T;
   for (ll t = 1; t <= T; ++t) solve(t);
 }

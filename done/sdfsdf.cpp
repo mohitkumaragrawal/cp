@@ -2,9 +2,6 @@
 using namespace std;
 #define all(x) begin(x), end(x)
 #define OUT(T) cout << "Case #" << T << ": "
-#ifndef _DEBUG
-#define endl '\n'
-#endif
 #ifdef _DEBUG
 void dbg_out() { cerr << endl; }
 template <typename Head, typename... Tail>
@@ -29,12 +26,60 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n;
+  cin >> n;
+
+  vector<vector<ll>> adj(n + 1);
+  vector<ll> parent(n + 1);
+  parent[1] = -1;
+  for (ll i = 2; i <= n; ++i) {
+    ll p;
+    cin >> p;
+    parent[i] = p;
+
+    adj[p].push_back(i);
+  }
+
+  vector<ll> depth(n + 1);
+  ll k = 0;
+  auto dfs = [&](auto &&dfs, ll cur, ll dep) -> void {
+    depth[cur] = dep;
+    ckmax(k, dep);
+    for (ll x : adj[cur]) {
+      dfs(dfs, x, dep + 1);
+    }
+  };
+  dfs(dfs, 1, 0);
+
+  cout << k << endl;
+  for (ll i = 2; i <= n; ++i) {
+    cout << depth[i] << " ";
+  }
+  cout << endl;
+
+  while (true) {
+    ll t;
+    cin >> t;
+
+    if (t != 0) return;
+
+    vector<ll> clr(k);
+    cin >> clr;
+
+    for (ll i = 0; i < k; ++i) {
+      if (clr[i] != 0) {
+        cout << i + 1 << endl;
+        break;
+      }
+    }
+  }
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
+  /* cin >> T; */
   for (ll t = 1; t <= T; ++t) solve(t);
 }

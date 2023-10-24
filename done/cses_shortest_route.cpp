@@ -29,12 +29,45 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  int n, m;
+  cin >> n >> m;
+
+  vector<vector<pll>> adj(n);
+  for (int i = 0; i < m; ++i) {
+    int a, b, c;
+    cin >> a >> b >> c;
+    a--, b--;
+    adj[a].push_back({b, c});
+  }
+
+  priority_queue<pll, vector<pll>, greater<pll>> pq;
+
+  const ll INF = 1e16;
+  vector<ll> d(n, INF);
+  vector<bool> vis(n);
+
+  d[0] = 0;
+  pq.push({0, 0});
+  while (!pq.empty()) {
+    auto [dist, u] = pq.top();
+    pq.pop();
+    if (vis[u]) continue;
+    vis[u] = true;
+    for (auto [v, w] : adj[u]) {
+      if (d[v] > d[u] + w) {
+        d[v] = d[u] + w;
+        pq.push({d[v], v});
+      }
+    }
+  }
+  cout << d << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
+  // cin >> T;
   for (ll t = 1; t <= T; ++t) solve(t);
 }

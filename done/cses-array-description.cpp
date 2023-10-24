@@ -29,12 +29,47 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n, m;
+  cin >> n >> m;
+
+  vector<ll> a(n);
+  cin >> a;
+
+  const ll MOD = 1e9 + 7;
+
+  vector<vector<ll>> dp(n, vector<ll>(m + 2, 0));
+  if (a[0] == 0) {
+    fill(all(dp[0]), 1LL);
+    dp[0][0] = 0;
+    dp[0][m + 1] = 0;
+  } else {
+    dp[0][a[0]] = 1;
+  }
+
+  for (ll i = 1; i < n; ++i) {
+    if (a[i] == 0) {
+      for (ll j = 1; j <= m; ++j) {
+        dp[i][j] = dp[i - 1][j] + dp[i - 1][j + 1] + dp[i - 1][j - 1];
+        dp[i][j] %= MOD;
+      }
+    } else {
+      ll x = a[i];
+      dp[i][x] = dp[i - 1][x] + dp[i - 1][x + 1] + dp[i - 1][x - 1];
+      dp[i][x] %= MOD;
+    }
+  }
+
+  ll ans = 0;
+  for (ll j = 1; j <= m; ++j) {
+    ans = (ans + dp[n - 1][j]) % MOD;
+  }
+  cout << ans << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
   for (ll t = 1; t <= T; ++t) solve(t);
 }

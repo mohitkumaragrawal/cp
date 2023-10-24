@@ -29,12 +29,58 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+const int N = 2e5 + 10;
+int cid[N], csz[N], dep[N], nxt[N];
+bool vis[N], st[N], cycle[N];
+
+void dfs(int cur) {
+  vis[cur] = true;
+  st[cur] = true;
+  int p = nxt[cur];
+
+  if (vis[p] && st[p]) {
+    int sz = 1;
+    int it = p;
+    while (it != cur) {
+      sz++;
+      cycle[it] = true;
+      it = nxt[it];
+    }
+    csz[p] = sz;
+    cycle[cur] = true;
+    cid[cur] = p;
+  } else {
+    if (!vis[p]) dfs(p);
+    cid[cur] = cid[p];
+    if (!cycle[cur]) {
+      dep[cur] = 1 + dep[p];
+    }
+  }
+  st[cur] = false;
+}
+
+void solve(ll _t) {
+  int n;
+  cin >> n;
+
+  for (int i = 0; i < n; ++i) {
+    cin >> nxt[i];
+    nxt[i]--;
+  }
+  for (int i = 0; i < n; ++i) {
+    if (!vis[i]) dfs(i);
+  }
+
+  for (int i = 0; i < n; ++i) {
+    cout << dep[i] + csz[cid[i]] << " ";
+  }
+  cout << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
+  // cin >> T;
   for (ll t = 1; t <= T; ++t) solve(t);
 }

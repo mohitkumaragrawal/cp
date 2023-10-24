@@ -29,7 +29,64 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+ll f(vector<ll> a, vector<ll> b) {
+  sort(all(a));
+  sort(all(b));
+  ll n = a.size();
+  ll j = 0;
+
+  ll ans = 0;
+  for (ll i = 0; i < n; ++i) {
+    while (j < n && b[j] <= a[i]) j++;
+    if (j >= n) break;
+    ans++;
+    j++;
+  }
+  return ans;
+}
+
+void solve(ll _t) {
+  ll n, m;
+  cin >> n >> m;
+  vector<ll> a(n), b(n);
+  a[0] = 1e16;
+
+  for (ll i = 1; i < n; ++i) cin >> a[i];
+  cin >> b;
+  sort(all(b));
+
+  ll t = f(a, b);
+
+  a[0] = m;
+  ll tt = f(a, b);
+  if (tt == t + 1) {
+    ll ans = (n - t - 1) * m;
+    cout << ans << endl;
+    return;
+  }
+
+  ll lo = 1, hi = m;
+  while (hi > lo) {
+    ll mid = (lo + hi) / 2;
+
+    a[0] = mid;
+    ll k = f(a, b);
+
+    dbg(mid, k);
+
+    if (k == t) {
+      hi = mid;
+    } else {
+      lo = mid + 1;
+    }
+  }
+
+  dbg(hi, t);
+  ll tot = n * m;
+  ll ans = (t + 1) * (hi - 1) + (t * (m - hi + 1));
+  ans = tot - ans;
+  cout << ans << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);

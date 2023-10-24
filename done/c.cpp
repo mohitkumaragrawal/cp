@@ -29,7 +29,39 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n;
+  cin >> n;
+
+  vector<ll> a(n);
+  cin >> a;
+
+  map<ll, ll> left_idx, right_idx;
+  for (ll i = 0; i < n; ++i) {
+    ll x = a[i];
+
+    if (left_idx.count(x)) {
+      left_idx[x] = min(left_idx[x], i);
+      right_idx[x] = max(right_idx[x], i);
+    } else {
+      left_idx[x] = i;
+      right_idx[x] = i;
+    }
+  }
+
+  ll cnt = 0;
+  ll ans = 0;
+
+  for (ll i = 0; i < n; ++i) {
+    if (i == left_idx[a[i]]) {
+      cnt++;
+    }
+    if (i == right_idx[a[i]]) {
+      ans += cnt;
+    }
+  }
+  cout << ans << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);

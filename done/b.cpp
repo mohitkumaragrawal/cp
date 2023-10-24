@@ -29,7 +29,35 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n;
+  cin >> n;
+
+  string s;
+  cin >> s;
+
+  vector<ll> x;
+  ll t = 0;
+  for (ll i = n - 1; i >= 0; --i) {
+    if (s[i] == '1') {
+      t++;
+    } else {
+      x.push_back(t);
+    }
+  }
+
+  ll z = 0;
+  for (ll i = 0; i < n; ++i) {
+    if (i >= x.size()) {
+      cout << -1 << " ";
+      ;
+    } else {
+      z += x[i];
+      cout << z << " ";
+    }
+  }
+  cout << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);

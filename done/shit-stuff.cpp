@@ -29,12 +29,29 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+class Animal {
+ public:
+  int x = 10;
+
+  void speak() { cout << "Animal speaks" << endl; }
+};
+
+class Dog : virtual public Animal {
+ public:
+  void speak() { cout << "Dog barks" << endl; }
+};
+
+class Cat : virtual public Animal {
+ public:
+  void speak() { cout << "Cat meows" << endl; }
+};
+
+class Pet : public Dog, public Cat {};
 
 int main() {
-  ios_base::sync_with_stdio(false), cin.tie(NULL);
-
-  ll T = 1;
-  cin >> T;
-  for (ll t = 1; t <= T; ++t) solve(t);
+  Pet myPet;
+  myPet.Dog::speak();  // Ambiguity: Which speak() method to call?
+                       //
+  cout << myPet.x << endl;
+  return 0;
 }

@@ -29,12 +29,47 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+int dp[100][100];
+
+int solve(string &s, int l, int r) {
+  if (l == r) return 1;
+  if (dp[l][r] != -1) return dp[l][r];
+  int n = r - l + 1;
+  vector<int> pi(n);
+
+  for (int i = 1; i < n; ++i) {
+    int j = pi[i - 1];
+    while (j > 0 && s[i + l] != s[j + l]) {
+      j = pi[j - 1];
+    }
+    if (s[i + l] == s[j + l]) j++;
+    pi[i] = j;
+  }
+
+  int k = n - pi[n - 1];
+  if (k != n && n % k == 0) {
+    return dp[l][r] = solve(s, l, l + k - 1);
+  } else {
+    int ans = 1e8;
+    for (int k = l; k < r; ++k) {
+      int new_ans = solve(s, l, k) + solve(s, k + 1, r);
+      ckmin(ans, new_ans);
+    }
+
+    return dp[l][r] = ans;
+  }
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
+  while (true) {
+    string s;
+    cin >> s;
 
-  ll T = 1;
-  cin >> T;
-  for (ll t = 1; t <= T; ++t) solve(t);
+    if (s == "*") break;
+
+    memset(dp, -1, sizeof dp);
+    int ans = solve(s, 0, s.size() - 1);
+    cout << ans << endl;
+  }
 }

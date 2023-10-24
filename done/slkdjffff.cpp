@@ -29,7 +29,33 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n, m, d;
+  cin >> n >> m >> d;
+
+  ll ans = 0;
+  multiset<ll> st;
+  ll sum = 0;
+
+  vector<ll> a(n);
+  cin >> a;
+
+  for (ll i = 0; i < n; ++i) {
+    st.insert(a[i]);
+    sum += a[i];
+    while (!st.empty() && (*st.begin()) < 0) {
+      sum -= *st.begin();
+      st.erase(st.begin());
+    }
+    while (st.size() > m) {
+      sum -= *st.begin();
+      st.erase(st.begin());
+    }
+
+    ckmax(ans, sum - (i + 1) * d);
+  }
+  cout << ans << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);

@@ -29,12 +29,32 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n, a, b;
+  cin >> n >> a >> b;
+  vector<ll> arr(n);
+  cin >> arr;
+
+  vector<ll> pre(n + 1);
+  for (ll i = 1; i <= n; ++i) pre[i] = arr[i - 1] + pre[i - 1];
+  ll ans = -1e18;
+
+  deque<ll> q;
+  for (ll i = a; i <= n; ++i) {
+    while (!q.empty() && pre[q.back()] > pre[i - a]) q.pop_back();
+    while (!q.empty() && q.front() < i - b) q.pop_front();
+    q.push_back(i - a);
+
+    ckmax(ans, pre[i] - pre[q.front()]);
+  }
+
+  cout << ans << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
+  /* cin >> T; */
   for (ll t = 1; t <= T; ++t) solve(t);
 }

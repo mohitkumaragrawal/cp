@@ -1,4 +1,6 @@
 #include <bits/stdc++.h>
+
+#include <algorithm>
 using namespace std;
 #define all(x) begin(x), end(x)
 #define OUT(T) cout << "Case #" << T << ": "
@@ -29,7 +31,52 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n, k;
+  cin >> n >> k;
+
+  string s;
+  cin >> s;
+
+  vector<ll> l(k), r(k);
+  cin >> l >> r;
+
+  for (auto &x : l) x--;
+  for (auto &x : r) x--;
+
+  ll q;
+  cin >> q;
+
+  vector<ll> diff(n + 1);
+  auto inc = [&](ll l, ll r) {
+    if (l > r) swap(l, r);
+    diff[l]++;
+    diff[r + 1]--;
+  };
+
+  while (q--) {
+    ll x;
+    cin >> x;
+    x--;
+
+    ll idx = lower_bound(all(r), x) - begin(r);
+    ll y = l[idx] + r[idx] - x;
+
+    inc(x, y);
+  }
+
+  for (ll i = 1; i < n; ++i) diff[i] += diff[i - 1];
+
+  for (ll i = 0; i < n; ++i) {
+    if (diff[i] % 2 == 0) continue;
+
+    ll idx = lower_bound(all(r), i) - begin(r);
+    ll j = l[idx] + r[idx] - i;
+    if (j > i) swap(s[i], s[j]);
+  }
+
+  cout << s << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);

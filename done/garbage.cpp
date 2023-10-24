@@ -29,7 +29,7 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) { cout << "Hello World" << endl; }
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);

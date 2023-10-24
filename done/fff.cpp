@@ -29,7 +29,35 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n, m;
+  cin >> n >> m;
+
+  if (m == 1) {
+    cout << 0 << endl;
+  } else {
+    cout << min(n + 1, m) << endl;
+  }
+
+  vector<ll> def(m);
+  def[0] = m - 1;
+  for (ll i = 1; i < m; ++i) def[i] = i - 1;
+
+  vector<vector<ll>> ans(n, def);
+
+  for (ll i = 1; i < min(m - 1, n); ++i) {
+    for (ll j = 1; j <= m; ++j) {
+      ans[i][j % m] = ans[i - 1][j - 1];
+    }
+  }
+
+  for (ll i = 0; i < n; ++i) {
+    for (ll j = 0; j < m; ++j) {
+      cout << ans[i][j] << " ";
+    }
+    cout << endl;
+  }
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);

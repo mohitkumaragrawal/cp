@@ -22,21 +22,10 @@ ll rand(ll a, ll b) { return a + ((rng()) % (b - a + 1)); }
 int main(int argc, char **argv) {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
-  ll n = 10;
+  ll n = 500;
 
   vector<ll> a(n);
-  bool ok = false;
-
-  while (!ok) {
-    ll c = 0;
-    for (ll i = 0; i < n; ++i) {
-      a[i] = rand(0, 1);
-      c += a[i];
-    }
-
-    if (c <= n / 2)
-      ok = true;
-  }
+  for (ll &x : a) x = rand(10, 1000);
 
   cout << n << endl;
   cout << a << endl;

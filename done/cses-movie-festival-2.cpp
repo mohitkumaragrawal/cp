@@ -29,12 +29,33 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n, k;
+  cin >> n >> k;
+
+  vector<pll> a(n);
+  for (auto &[s, e] : a) cin >> s >> e;
+  sort(all(a), [](pll x, pll y) { return x.second < y.second; });
+
+  multiset<ll> f;
+  for (ll i = 0; i < k; ++i) f.insert(0);
+  ll cnt = 0;
+
+  for (auto [s, e] : a) {
+    if (*f.begin() > s) continue;
+    cnt++;
+    auto itr = f.lower_bound(s);
+    if (itr == f.end() || *itr > s) itr = prev(itr);
+    f.erase(itr);
+    f.insert(e);
+  }
+  cout << cnt << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
+  /* cin >> T; */
   for (ll t = 1; t <= T; ++t) solve(t);
 }

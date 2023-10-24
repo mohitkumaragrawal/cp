@@ -29,12 +29,46 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+const ll N = 2e5 + 10;
+ll n, k, a[N], mx;
+
+bool check(ll m) {
+  if (m < mx) return false;
+  ll cnt = 0, sum = 0;
+  for (ll i = 0; i < n; ++i) {
+    if (sum + a[i] > m) {
+      sum = a[i];
+      cnt++;
+    } else {
+      sum += a[i];
+    }
+  }
+  if (sum != 0) cnt++;
+  return cnt <= k;
+}
+
+void solve(ll _t) {
+  cin >> n >> k;
+  for (int i = 0; i < n; ++i) {
+    cin >> a[i];
+    ckmax(mx, a[i]);
+  }
+
+  ll lo = 0, hi = 1e16;
+  while (hi - lo > 1) {
+    ll m = (lo + hi) / 2;
+    if (check(m))
+      hi = m;
+    else
+      lo = m;
+  }
+  cout << hi << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
+  /* cin >> T; */
   for (ll t = 1; t <= T; ++t) solve(t);
 }

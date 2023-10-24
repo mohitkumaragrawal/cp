@@ -29,12 +29,60 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  int n, m;
+  cin >> n >> m;
+
+  vector<vector<int>> G(n);
+  vector<int> inorder(n);
+  for (int i = 0; i < m; ++i) {
+    int u, v;
+    cin >> u >> v;
+    u--, v--;
+    G[u].push_back(v);
+    inorder[v]++;
+  }
+
+  vector<int> toposort;
+  queue<int> q;
+  for (int i = 0; i < n; ++i) {
+    if (inorder[i] == 0) {
+      q.push(i);
+    }
+  }
+  while (!q.empty()) {
+    int v = q.front();
+    q.pop();
+    toposort.push_back(v);
+    for (int i : G[v]) {
+      inorder[i]--;
+      if (inorder[i] == 0) {
+        q.push(i);
+      }
+    }
+  }
+
+  const ll MOD = 1e9 + 7;
+  vector<ll> ways(n);
+  ways[0] = 1;
+
+  for (int i = 0; i < n; ++i) {
+    int v = toposort[i];
+    if (ways[v] == 0) continue;
+
+    for (int x : G[v]) {
+      ways[x] += ways[v];
+      ways[x] %= MOD;
+    }
+  }
+
+  cout << ways[n - 1] << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
+  // cin >> T;
   for (ll t = 1; t <= T; ++t) solve(t);
 }

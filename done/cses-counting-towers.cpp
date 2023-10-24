@@ -29,10 +29,37 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+const ll N = 1e6 + 10;
+ll dp[N][3];
+const ll MOD = 1e9 + 7;
+
+void solve(ll _t) {
+  ll n;
+  cin >> n;
+
+  cout << dp[n][2] << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
+
+  dp[1][0] = 1;
+  dp[1][1] = 3;
+  dp[1][2] = 2;
+
+  for (ll i = 1; i < N - 5; ++i) {
+    dp[i + 1][0] += dp[i][0];
+    dp[i + 1][2] += dp[i][0];
+
+    dp[i + 1][1] += 3 * dp[i][1];
+    dp[i + 1][2] += dp[i][1];
+
+    dp[i + 1][0] += dp[i][2];
+    dp[i + 1][1] += 3 * dp[i][2];
+    dp[i + 1][2] += 2 * dp[i][2];
+
+    for (ll j = 0; j < 3; ++j) dp[i + 1][j] %= MOD;
+  }
 
   ll T = 1;
   cin >> T;

@@ -29,7 +29,54 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n;
+  cin >> n;
+
+  string s;
+  cin >> s;
+
+  vector<int> op(n);
+  vector<int> pressed(n);
+
+  int ans = 0;
+  for (int i = 0; i < n; ++i) {
+    int v = s[i] - '0';
+    if (op[i] & 1) {
+      v ^= 1;
+    }
+    if (v == 1) {
+      ans++;
+      pressed[i] = 1;
+      for (int j = i; j < n; j += (i + 1)) {
+        op[j]++;
+      }
+    }
+  }
+
+  int q;
+  cin >> q;
+
+  ll total = 0;
+
+  for (int i = 0; i < q; ++i) {
+    int x;
+    cin >> x;
+    x--;
+
+    if (pressed[x] == 1) {
+      pressed[x] = 0;
+      ans--;
+      total += ans;
+    } else {
+      pressed[x] = 1;
+      ans++;
+      total += ans;
+    }
+  }
+
+  OUT(_t) << total << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);

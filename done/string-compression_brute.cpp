@@ -29,12 +29,31 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n;
+  cin >> n;
+
+  vector<ll> a(n);
+  cin >> a;
+
+  ll ans = 0;
+  for (ll i = 0; i < n; ++i) {
+    for (ll j = 0; j < n; ++j) {
+      if (j == i) continue;
+
+      if (a[j] != 0 && a[i] % a[j] == 0) {
+        ans++;
+        break;
+      }
+    }
+  }
+  cout << ans << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
+  // cin >> T;
   for (ll t = 1; t <= T; ++t) solve(t);
 }

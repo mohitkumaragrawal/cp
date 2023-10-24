@@ -29,12 +29,41 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  int n, m, q;
+  cin >> n >> m >> q;
+  const ll INF = 1e18;
+  vector<vector<ll>> mat(n, vector<ll>(n, INF));
+  for (int i = 0; i < n; ++i) mat[i][i] = 0;
+  for (int i = 0; i < m; ++i) {
+    ll a, b, c;
+    cin >> a >> b >> c;
+    a--, b--;
+    ckmin(mat[a][b], c);
+    ckmin(mat[b][a], c);
+  }
+  for (int k = 0; k < n; ++k) {
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < n; ++j) {
+        ckmin(mat[i][j], mat[i][k] + mat[k][j]);
+      }
+    }
+  }
+  for (int i = 0; i < q; ++i) {
+    int a, b;
+    cin >> a >> b;
+    ll ans = mat[a - 1][b - 1];
+    if (ans == INF)
+      cout << -1 << endl;
+    else
+      cout << ans << endl;
+  }
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
+  // cin >> T;
   for (ll t = 1; t <= T; ++t) solve(t);
 }

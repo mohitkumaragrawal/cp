@@ -29,12 +29,63 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n, m;
+  cin >> n >> m;
+
+  vector<set<ll>> adj(n);
+  vector<ll> deg(n);
+
+  for (ll i = 0; i < m; ++i) {
+    ll u, v;
+    cin >> u >> v;
+    u--, v--;
+    adj[u].insert(v);
+    adj[v].insert(u);
+
+    deg[u]++, deg[v]++;
+  }
+
+  // check for even degrees;
+  for (ll i = 0; i < n; ++i) {
+    if (deg[i] & 1) {
+      cout << "IMPOSSIBLE" << endl;
+      return;
+    }
+  }
+
+  stack<ll> st;
+  st.push(0);
+
+  vector<ll> res;
+
+  while (!st.empty()) {
+    ll v = st.top();
+
+    if (adj[v].empty()) {
+      st.pop();
+      res.push_back(v + 1);
+    } else {
+      ll u = *adj[v].begin();
+
+      adj[v].erase(u);
+      adj[u].erase(v);
+
+      st.push(u);
+    }
+  }
+  if (res.size() != m + 1) {
+    cout << "IMPOSSIBLE" << endl;
+    return;
+  }
+
+  cout << res << endl;
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
+  /* cin >> T; */
   for (ll t = 1; t <= T; ++t) solve(t);
 }

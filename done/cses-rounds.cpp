@@ -29,12 +29,50 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {}
+void solve(ll _t) {
+  ll n, m;
+  cin >> n >> m;
+
+  vector<ll> a(n);
+  cin >> a;
+
+  vector<ll> idx(n + 1);
+  for (ll i = 0; i < n; ++i) idx[a[i]] = i;
+
+  ll ans = 1;
+  for (ll i = 1; i < n; ++i) {
+    if (idx[i + 1] < idx[i]) ans++;
+  }
+
+  while (m--) {
+    ll i, j;
+    cin >> i >> j;
+    i--, j--;
+
+    set<ll> st = {a[i], a[j], a[i] - 1, a[j] - 1};
+    for (ll t : st) {
+      if (t < 1 || t >= n) continue;
+      if (idx[t + 1] < idx[t]) ans--;
+    }
+
+    swap(a[i], a[j]);
+
+    idx[a[i]] = i;
+    idx[a[j]] = j;
+
+    for (ll t : st) {
+      if (t < 1 || t >= n) continue;
+      if (idx[t + 1] < idx[t]) ans++;
+    }
+
+    cout << ans << endl;
+  }
+}
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
+  /* cin >> T; */
   for (ll t = 1; t <= T; ++t) solve(t);
 }
