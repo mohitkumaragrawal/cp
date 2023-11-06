@@ -29,38 +29,56 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-void solve(ll _t) {
-  dbg(_t);
-  ll n;
-  cin >> n;
+const ll N = 2e5 + 5;
 
-  vector<ll> a(n);
-  cin >> a;
+ll n, m;
+vector<tuple<ll, ll, ll>> adj[N];
+vector<ll> order;
+lld dp[N];
+ll inorder[N];
 
-  bool ok = true;
-
-  for (ll i = 1; i <= 10 * n; i *= 2) {
-    ll mx_idx = min(n - 1, i - 1);
-    ll mn_idx = min(n - 1, i / 2);
-
-    dbg(mn_idx, mx_idx);
-
-    for (ll j = mn_idx; j < mx_idx; ++j) {
-      if (a[j + 1] < a[j]) ok = false;
+bool check(lld x) {
+  fill(dp, dp + n, lld(-1e15));
+  dp[0] = 0;
+  for (auto i : order) {
+    for (auto [j, b, c] : adj[i]) {
+      lld w = b - c * x;
+      ckmax(dp[j], dp[i] + w);
     }
   }
-
-  if (!ok) {
-    cout << "NO" << endl;
-  } else {
-    cout << "YES" << endl;
-  }
+  return dp[n - 1] >= 0.0;
 }
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
-
-  ll T = 1;
-  cin >> T;
-  for (ll t = 1; t <= T; ++t) solve(t);
+  cin >> n >> m;
+  for (ll i = 0; i < m; ++i) {
+    ll u, v, b, c;
+    cin >> u >> v >> b >> c;
+    u--, v--;
+    adj[u].emplace_back(v, b, c);
+    inorder[v]++;
+  }
+  queue<ll> q;
+  for (ll i = 0; i < n; ++i) {
+    if (inorder[i] == 0) q.push(i);
+  }
+  while (!q.empty()) {
+    auto u = q.front();
+    q.pop();
+    order.push_back(u);
+    for (auto [v, b, c] : adj[u]) {
+      if (--inorder[v] == 0) q.push(v);
+    }
+  }
+  lld lo = 0, hi = 1e9 + 1;
+  lld ep = 1e-10;
+  while (hi - lo > ep) {
+    lld mid = (lo + hi) / 2;
+    if (check(mid))
+      lo = mid;
+    else
+      hi = mid;
+  }
+  cout << fixed << setprecision(15) << (lo + hi) / 2 << endl;
 }

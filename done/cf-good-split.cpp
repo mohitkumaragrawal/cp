@@ -29,6 +29,37 @@ using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
+const int N = 3e5 + 5;
+
+struct min_op {
+  ll operator()(ll a, ll b) { return min(a, b); }
+};
+template <typename OperationT>
+struct sparse_table {
+  vector<vector<ll>> m;
+  OperationT op;
+  template <typename Itr>
+  void init(Itr begin, Itr end) {
+    ll sz = end - begin;
+    ll lg = 63 - __builtin_clzll(sz);
+    m.assign(sz, vector<ll>(lg + 1));
+    for (ll j = 0; j <= lg; ++j) {
+      ll len = (1 << j);
+      for (ll i = 0; i + len - 1 < sz; ++i) {
+        if (len == 1) {
+          m[i][j] = *(begin + i);
+        } else {
+          m[i][j] = op(m[i][j - 1], m[i + (1 << (j - 1))][j - 1]);
+        }
+      }
+    }
+  }
+  ll query(ll L, ll R) {
+    ll j = 63 - __builtin_clzll((R - L + 1));
+    return op(m[L][j], m[R + 1 - (1 << j)][j]);
+  }
+};
+
 template <typename node_type, typename tag_type>
 struct lazy_segtree {
   vector<node_type> tree;
@@ -110,70 +141,104 @@ struct node {
   }
 };
 
-ll q;
+int n;
+int a[N], left_bigger[N], right_bigger[N], y_idx[N];
+
 void solve(ll _t) {
-  cin >> q;
-  vector<vector<ll>> adj(1);
-  vector<tuple<ll, ll, ll>> queries;
-  for (ll i = 0; i < q; ++i) {
-    ll t;
-    cin >> t;
-    if (t == 1) {
-      ll v;
-      cin >> v;
-      v--;
-      ll j = adj.size();
-      adj.push_back({});
+  cin >> n;
+  for (int i = 0; i < n; ++i) cin >> a[i];
 
-      adj[v].push_back(j);
-      adj[j].push_back(v);
+  sparse_table<min_op> rmq;
+  rmq.init(a, a + n);
 
-      queries.push_back({t, j, 0LL});
-    } else {
-      ll p, x;
-      cin >> p >> x;
-      p--;
-      queries.push_back({t, p, x});
+  vector<int> st;
+  for (int i = 0; i < n; ++i) {
+    while (!st.empty() && a[st.back()] < a[i]) {
+      right_bigger[st.back()] = i;
+      st.pop_back();
     }
+    if (st.empty()) {
+      left_bigger[i] = -1;
+    } else {
+      left_bigger[i] = st.back();
+    }
+    st.push_back(i);
+  }
+  for (int i : st) right_bigger[i] = -1;
+  vector<vector<pii>> push_stack(n + 1), pop_stack(n + 1);
+  for (int i = 0; i < n; ++i) {
+    int j = right_bigger[i];
+    if (j == -1) continue;
+
+    if (rmq.query(j, n - 1) > a[i]) {
+      y_idx[i] = n - 1;
+      continue;
+    }
+
+    int lo = j, hi = n - 1;
+    while (hi - lo > 1) {
+      int m = (hi + lo) / 2;
+      if (rmq.query(j, m) > a[i]) {
+        lo = m;
+      } else {
+        hi = m;
+      }
+    }
+    y_idx[i] = lo;
   }
 
-  ll n = adj.size();
-  vector<ll> in_time(n), out_time(n);
+  for (int i = 0; i < n; ++i) {
+    if (right_bigger[i] == -1) continue;
 
-  ll time = 0;
-  auto dfs = [&](auto &&dfs, ll cur, ll par) -> void {
-    in_time[cur] = time++;
-    for (auto it : adj[cur]) {
-      if (it == par) continue;
-      dfs(dfs, it, cur);
-    }
-    out_time[cur] = time - 1;
-  };
-  dfs(dfs, 0, -1);
+    push_stack[left_bigger[i] + 1].emplace_back(right_bigger[i], y_idx[i]);
+    pop_stack[i + 1].emplace_back(right_bigger[i], y_idx[i]);
+  }
 
+  vector<int> lst_vec(n);
   lazy_segtree<node, tag> lst;
-  vector<ll> data(n);
-  lst.init(all(data));
+  lst.init(all(lst_vec));
 
-  vector<ll> ans(n);
+  int q;
+  cin >> q;
 
-  for (ll i = q - 1; i >= 0; --i) {
-    auto [t, x, y] = queries[i];
-    if (t == 1) {
-      ans[x] = lst.query(in_time[x], in_time[x]).data;
-    } else {
-      lst.update(in_time[x], out_time[x], {y});
+  vector<tuple<int, int, int>> queries;
+  vector<bool> ans(q);
+
+  for (int i = 0; i < q; ++i) {
+    int l, r;
+    cin >> l >> r;
+    l--, r--;
+    queries.emplace_back(l, r, i);
+  }
+  sort(queries.begin(), queries.end());
+  int j = 0;
+
+  for (int i = 0; i < n; ++i) {
+    for (auto [x, y] : push_stack[i]) lst.update(x, y, {1});
+    for (auto [x, y] : pop_stack[i]) lst.update(x, y, {-1});
+
+    while (j < q && get<0>(queries[j]) == i) {
+      auto [l, r, qidx] = queries[j];
+      int v = lst.query(r, r).data;
+
+      if (v > 0) {
+        ans[qidx] = true;
+      }
+      j++;
     }
   }
 
-  ans[0] = lst.query(0, 0).data;
-  cout << ans << endl;
+  for (int i = 0; i < q; ++i) {
+    if (ans[i]) {
+      cout << "YES" << endl;
+    } else {
+      cout << "NO" << endl;
+    }
+  }
 }
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
-  ll T = 1;
-  cin >> T;
-  for (ll t = 1; t <= T; ++t) solve(t);
+  solve(0);
 }

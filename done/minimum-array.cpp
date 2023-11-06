@@ -30,31 +30,56 @@ using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
 void solve(ll _t) {
-  dbg(_t);
   ll n;
   cin >> n;
 
-  vector<ll> a(n);
-  cin >> a;
+  vector<ll> a(n + 1);
+  for (int i = 0; i < n; ++i) cin >> a[i];
+  for (int i = n - 1; i >= 1; --i) {
+    a[i] -= a[i - 1];
+  }
 
-  bool ok = true;
+  int q;
+  cin >> q;
 
-  for (ll i = 1; i <= 10 * n; i *= 2) {
-    ll mx_idx = min(n - 1, i - 1);
-    ll mn_idx = min(n - 1, i / 2);
+  set<pll> changes;
 
-    dbg(mn_idx, mx_idx);
+  const ll INF = 1e16;
 
-    for (ll j = mn_idx; j < mx_idx; ++j) {
-      if (a[j + 1] < a[j]) ok = false;
+  auto add_change = [&](ll p, ll x) {
+    auto itr = changes.lower_bound({p, -INF});
+    if (itr != changes.end() && itr->first == p) {
+      x += itr->second;
+      changes.erase(itr);
+    }
+    if (x == 0) return;
+    changes.insert({p, x});
+  };
+
+  for (int i = 0; i < q; ++i) {
+    ll l, r, x;
+    cin >> l >> r >> x;
+    l--, r--;
+
+    add_change(l, x);
+    add_change(r + 1, -x);
+
+    if (changes.empty()) continue;
+
+    if (changes.begin()->second < 0) {
+      for (auto [p, d] : changes) {
+        a[p] += d;
+      }
+      changes.clear();
     }
   }
 
-  if (!ok) {
-    cout << "NO" << endl;
-  } else {
-    cout << "YES" << endl;
+  for (int i = 1; i < n; ++i) a[i] += a[i - 1];
+
+  for (int i = 0; i < n; ++i) {
+    cout << a[i] << " ";
   }
+  cout << endl;
 }
 
 int main() {

@@ -35,17 +35,17 @@ fi
 # For stress testing
 if [ $1 = "stress" ]; then
 	# Compile everything
-	compile_source main.cpp a
-	compile_source gen.cpp gen
-	compile_source brute.cpp brute
+	compile_source main.cpp a.exe
+	compile_source gen.cpp gen.exe
+	compile_source brute.cpp brute.exe
 
 	# Start running testcases until we find a failed testcase
 	for ((i = 0; i < 1000; i++)); do
 		echo "RUNNING TEST $i ..."
-		./gen $i >input
+		./gen.exe $i >input
 
-		run_source ./a input output
-		run_source ./brute input brute_output
+		run_source ./a.exe input output
+		run_source ./brute.exe input brute_output
 
 		diff=$(diff -w output brute_output)
 		if [[ "${diff}" != "" ]]; then

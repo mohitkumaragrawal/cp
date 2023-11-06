@@ -6,17 +6,23 @@
     {
       "label": "Build main.cpp",
       "type": "shell",
-      "command": "bash cp.sh compile"
+      "command": "bash cp.sh compile",
     },
     {
       "label": "Run main.cpp",
       "type": "shell",
-      "command": "bash cp.sh run"
+      "command": "bash cp.sh run",
+      "presentation": {
+        "reveal": "silent",
+      }
     },
     {
       "label": "Flush",
       "type": "shell",
-      "command": "bash cp.sh flush ${input:flushname}"
+      "command": "bash cp.sh flush ${input:flushname}",
+      "presentation": {
+        "reveal": "never"
+      }
     }
   ],
   "inputs": [

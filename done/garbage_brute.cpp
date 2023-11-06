@@ -28,33 +28,49 @@ using ll = long long;
 using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
+ll q;
 
-void solve(ll _t) {
-  dbg(_t);
-  ll n;
-  cin >> n;
+void solve_brute() {
+  vector<vector<ll>> adj(1);
+  vector<ll> ans(1), par(1, -1);
 
-  vector<ll> a(n);
-  cin >> a;
+  auto dfs = [&](auto &&dfs, ll cur, ll par, ll x) -> void {
+    ans[cur] += x;
+    for (ll it : adj[cur]) {
+      if (it == par) continue;
+      dfs(dfs, it, cur, x);
+    }
+  };
 
-  bool ok = true;
+  for (ll i = 0; i < q; ++i) {
+    ll t;
+    cin >> t;
 
-  for (ll i = 1; i <= 10 * n; i *= 2) {
-    ll mx_idx = min(n - 1, i - 1);
-    ll mn_idx = min(n - 1, i / 2);
+    if (t == 1) {
+      ll v;
+      cin >> v;
+      v--;
 
-    dbg(mn_idx, mx_idx);
-
-    for (ll j = mn_idx; j < mx_idx; ++j) {
-      if (a[j + 1] < a[j]) ok = false;
+      ll j = adj.size();
+      adj.push_back({});
+      adj[v].push_back(j);
+      adj[j].push_back(v);
+      par.push_back(v);
+      ans.push_back(0);
+    } else {
+      ll v, p;
+      cin >> v >> p;
+      v--;
+      dfs(dfs, v, par[v], p);
     }
   }
 
-  if (!ok) {
-    cout << "NO" << endl;
-  } else {
-    cout << "YES" << endl;
-  }
+  cout << ans << endl;
+}
+
+void solve(ll _t) {
+  cin >> q;
+  solve_brute();
 }
 
 int main() {

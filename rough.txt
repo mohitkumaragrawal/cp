@@ -1,14 +1,37 @@
+oursaco:
+Div1 D can also be solved using divide and conquer:
+https://codeforces.com/contest/1887/submission/229298128
 
-count(n, m, M) = # of non-negative numbers <= n, whose digits lie in the range [m, M]
+Editorial:
+My solutions a bit more complicated than the intended.
 
-To find the count function we can iterate over the digits of n;
+For a single query, can initially add al
+ to the left split and keep expanding the left split while there is a smaller
+element in the right split. Similarly, you can add ar to the right split and
+keep expanding the right split while there is a larger element in the left
+split.
 
-Say we are the i-th digit from the left where we have 2 choices.
-1. Either to select a digit less than d[i]
+If you had only prefix queries, you could sweep on the right index of the query
+and maintain prv[i] = left index of the right split for the interval [1,i] . For
+suffix queries you can maintain nxt[i] = right index of the left split for the
+interval [i,n]
+.
 
-    - In this case we have all the options from [m, min(M, d[i] - 1)]
-    - Since we have selected a smaller digit remaining positions can be filled by any digit in the range [m, M]
+In the divide and conquer, when while on the interval [l,r]
+, run a sweep to compute prv[i]
+ for [mid+1,r]
+ and nxt[i]
+ for [l,mid]
+. This can be done in O(nlogn)
+ time so by the master theorem, a total complexity of O(nlog2n)
+.
 
-2. Or we can simply select d[i] and look for possibilities in the remainig digit;
+When in the interval, process all queries that cover mid
+. The conditions for there being no split is that the interval [li,nxt[li]]
+ contains an element greater than one in [mid+1,ri]
+ and the interval [prv[ri],ri]
+ contains an element smaller than one in [li,mid]
+. I used some segtrees to maintain this, which is also O(n log n). This is also
+O(nlog2n) by the master theorem.
 
-If we see this count will also include those numbers which won't have digits m and M together, where all the digits are either in ther range [m+1, M] or [m, M-1]
+I think my implementation has a bunch of redundant code :clown:

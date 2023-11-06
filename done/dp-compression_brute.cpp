@@ -30,37 +30,28 @@ using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
 void solve(ll _t) {
-  dbg(_t);
-  ll n;
-  cin >> n;
+  ll n, p;
+  cin >> n >> p;
 
-  vector<ll> a(n);
-  cin >> a;
+  vector<vector<ll>> dp(n + 1, vector<ll>(p + 1));
+  for (ll i = 1; i <= p; ++i) {
+    dp[1][i] = 1 + dp[1][i - 1];
+  }
 
-  bool ok = true;
+  const ll MOD = (1e9 + 7);
 
-  for (ll i = 1; i <= 10 * n; i *= 2) {
-    ll mx_idx = min(n - 1, i - 1);
-    ll mn_idx = min(n - 1, i / 2);
-
-    dbg(mn_idx, mx_idx);
-
-    for (ll j = mn_idx; j < mx_idx; ++j) {
-      if (a[j + 1] < a[j]) ok = false;
+  for (ll i = 2; i <= n; ++i) {
+    for (ll j = 1; j <= p; ++j) {
+      dp[i][j] = (dp[i][j - 1] + dp[i - 1][(p / j)]) % MOD;
     }
   }
 
-  if (!ok) {
-    cout << "NO" << endl;
-  } else {
-    cout << "YES" << endl;
-  }
+  cout << dp[n][p] << endl;
 }
 
 int main() {
   ios_base::sync_with_stdio(false), cin.tie(NULL);
 
   ll T = 1;
-  cin >> T;
   for (ll t = 1; t <= T; ++t) solve(t);
 }

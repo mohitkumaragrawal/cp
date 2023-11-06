@@ -36,30 +36,59 @@ void solve(ll _t) {
   vector<ll> a(n);
   cin >> a;
 
-  map<ll, ll> left_idx, right_idx;
-  for (ll i = 0; i < n; ++i) {
-    ll x = a[i];
+  sort(all(a));
 
-    if (left_idx.count(x)) {
-      left_idx[x] = min(left_idx[x], i);
-      right_idx[x] = max(right_idx[x], i);
-    } else {
-      left_idx[x] = i;
-      right_idx[x] = i;
-    }
-  }
-
-  ll cnt = 0;
   ll ans = 0;
+  ll c = 0;
+  ll l = 0, r = n - 1;
 
-  for (ll i = 0; i < n; ++i) {
-    if (i == left_idx[a[i]]) {
-      cnt++;
+  while (r >= l) {
+    if (l == r) {
+      if (c >= a[l]) {
+        ans++;
+        break;
+      }
+
+      if (a[l] == 1) {
+        ans++;
+        break;
+      }
+
+      ll x = (a[l] - c) / 2;
+
+      ans += x + 1;
+      c += x;
+
+      a[l] -= (x + c);
+
+      ans += a[l];
+
+      break;
     }
-    if (i == right_idx[a[i]]) {
-      ans += cnt;
+
+    if (c + a[l] <= a[r]) {
+      c += a[l];
+      ans += a[l];
+      l++;
+
+      if (c == a[r]) {
+        c = 0;
+        r--;
+        ans++;
+      }
+
+      continue;
     }
+
+    ll need = a[r] - c;
+    a[l] -= need;
+    ans += need + 1;
+    c = 0;
+
+    if (a[l] == 0) l++;
+    r--;
   }
+
   cout << ans << endl;
 }
 

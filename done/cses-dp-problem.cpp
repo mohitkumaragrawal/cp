@@ -1,6 +1,4 @@
 #include <bits/stdc++.h>
-
-#include <algorithm>
 using namespace std;
 #define all(x) begin(x), end(x)
 #define OUT(T) cout << "Case #" << T << ": "
@@ -32,44 +30,44 @@ using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
 void solve(ll _t) {
-  ll n;
-  cin >> n;
+  string a, b;
+  cin >> a >> b;
+  int n = a.size(), m = b.size();
 
-  vector<array<ll, 3>> v(n);
-  vector<ll> comp;
-  for (ll i = 0; i < n; ++i) {
-    for (ll j = 0; j < 3; ++j) {
-      cin >> v[i][j];
-      if (j != 2) comp.push_back(v[i][j]);
+  // dp[i][j] = minimum number of moves
+
+  vector<vector<int>> dp(n + 1, vector<int>(m + 1, 1e7));
+
+  // if last character matches dp[i][j] = dp[i-1][j-1]
+  // else
+  //  we can replace the last character dp[i][j] = 1 + dp[i-1][j-1]
+  //  we can insert a new character same as last character, dp[i][j] =
+  //  dp[i][j-1] + 1
+  //  we can delete the last character, dp[i][j] = 1 + dp[i-1][j]
+
+  for (int i = 0; i <= n; ++i) {
+    for (int j = 0; j <= m; ++j) {
+      if (i == 0 && j == 0) {
+        dp[i][j] = 0;
+        continue;
+      }
+      if (i > 0 && j > 0) {
+        if (a[i - 1] == b[j - 1]) {
+          dp[i][j] = dp[i - 1][j - 1];
+        } else {
+          dp[i][j] = 1 + dp[i - 1][j - 1];
+        }
+      }
+      if (j > 0) {
+        ckmin(dp[i][j], dp[i][j - 1] + 1);
+      }
+      if (i > 0) {
+        ckmin(dp[i][j], 1 + dp[i - 1][j]);
+      }
     }
   }
 
-  sort(all(comp));
-  for (ll i = 0; i < n; ++i) {
-    for (ll j = 0; j < 2; ++j)
-      v[i][j] = lower_bound(all(comp), v[i][j]) - begin(comp);
-  }
-
-  ll mx = comp.size();
-
-  vector<ll> dp(mx + 1);
-
-  sort(all(v), [](auto &x, auto &y) { return x[1] < y[1]; });
-  ll j = 0;
-
-  for (ll day = 0; day <= mx; ++day) {
-    if (day > 0) dp[day] = dp[day - 1];
-    while (j < n && v[j][1] == day) {
-      auto [s, e, p] = v[j];
-      j++;
-      if (s > 0)
-        ckmax(dp[e], p + dp[s - 1]);
-      else
-        ckmax(dp[e], p);
-    }
-  }
-
-  cout << dp[mx] << endl;
+  cout << dp[n][m] << endl;
 }
 
 int main() {
