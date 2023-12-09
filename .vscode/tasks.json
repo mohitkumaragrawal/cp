@@ -6,20 +6,44 @@
     {
       "label": "Build main.cpp",
       "type": "shell",
-      "command": "bash cp.sh compile",
+      "command": "g++",
+      "args": [
+        "-std=c++2a",
+        "-Winvalid-pch",
+        "-include",
+        "stdafx.h",
+        "-Wl,--stack=268435456",
+        "-O0",
+        "-D_DEBUG",
+        "-D_GLIBCXX_DEBUG",
+        "-D_GLIBCXX_DEBUG_PEDANTIC",
+        "main.cpp",
+        "-o",
+        "a"
+      ],
+      "options": {
+        "shell": {
+          "executable": "C:\\msys64\\usr\\bin\\bash.exe",
+          "args": ["-c"]
+        }
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     },
     {
       "label": "Run main.cpp",
       "type": "shell",
-      "command": "bash cp.sh run",
+      "command": "C:\\msys64\\usr\\bin\\bash.exe cp.sh run",
       "presentation": {
-        "reveal": "silent",
+        "reveal": "silent"
       }
     },
     {
       "label": "Flush",
       "type": "shell",
-      "command": "bash cp.sh flush ${input:flushname}",
+      "command": "C:\\msys64\\usr\\bin\\bash.exe cp.sh flush ${input:flushname}",
       "presentation": {
         "reveal": "never"
       }

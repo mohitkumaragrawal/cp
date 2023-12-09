@@ -1,19 +1,17 @@
 #!/usr/bin/bash
-
 function compile_source {
-	echo "Compiling $1 to $2"
-	local compilation_result=$(g++ \
-		--std=c++2a \
-		-Wall \
-		-Wextra \
-		-Wshadow \
-		-O2 \
-		-Wno-sign-compare \
-		-Wno-unused-parameter \
-		-D_DEBUG -D_GLIBCXX_DEBUG \
-		-D_GLIBCXX_DEBUG_PEDANTIC \
-		$1 -o $2)
-	echo $compilation_result
+    local compilation_output=$(g++ \
+        --std=c++2a \
+        -Winvalid-pch \
+        -include stdafx.h \
+        -Wl,--stack=268435456 \
+        -O0 \
+        -D_DEBUG \
+        -D_GLIBCXX_DEBUG \
+        -D_GLIBCXX_DEBUG_PEDANTIC \
+        $1 -o $2 2>&1)
+
+		echo "$compilation_output"
 }
 
 function run_source {

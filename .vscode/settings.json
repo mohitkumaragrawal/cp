@@ -2,8 +2,9 @@
   "files.associations": {
     "iostream": "cpp",
     "format": "cpp",
-    "output": "cpp",
+    "output": "plaintext",
     "*.tcc": "cpp",
-    "iosfwd": "cpp"
+    "iosfwd": "cpp",
+    "ostream": "cpp"
   }
 }
