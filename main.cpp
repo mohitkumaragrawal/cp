@@ -2,20 +2,14 @@
 using namespace std;
 #define all(x) begin(x), end(x)
 #define OUT(T) cout << "Case #" << T << ": "
-#ifndef _DEBUG
-#define endl '\n'
-#endif
+
 #ifdef _DEBUG
-void dbg_out() { cerr << endl; }
-template <typename Head, typename... Tail>
-void dbg_out(Head H, Tail... T) {
-  cerr << ' ' << H;
-  dbg_out(T...);
-}
-#define dbg(...) cerr << "(" << #__VA_ARGS__ << "):", dbg_out(__VA_ARGS__)
+#include "debugs.h"
 #else
 #define dbg(...)
+#define endl '\n'
 #endif
+
 #define ckmin(x, y) x = min((x), (y))
 #define ckmax(x, y) x = max((x), (y))
 
@@ -95,6 +89,8 @@ void solve(ll _t) {
       j = ans + 1;
     }
   }
+
+  dbg("Here we go");
 
   ll q;
   cin >> q;
