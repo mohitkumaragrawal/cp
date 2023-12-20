@@ -1,3 +1,6 @@
+#ifndef DEBUGS_H
+#define DEBUGS_H
+
 #pragma once
 
 #include "cpp-dump/dump.hpp"
@@ -9,3 +12,5 @@ struct cpp_dump_options {
 };
 cpp_dump_options __dummyOptions;
 #define dbg cpp_dump
+
+#endif  // DEBUGS_H
