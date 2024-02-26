@@ -4,7 +4,6 @@ function compile_source {
         --std=c++2a \
         -Winvalid-pch \
         -include stdafx.h \
-        -Wl,--stack=268435456 \
         -O0 \
         -D_DEBUG \
         -D_GLIBCXX_DEBUG \

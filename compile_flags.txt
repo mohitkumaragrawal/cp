@@ -1,4 +1,3 @@
---target=x86_64-w64-windows-gnu
 -std=c++2a
 -Winvalid-pch
 -include stdafx.h
@@ -7,3 +6,10 @@
 -D_DEBUG
 -D_GLIBCXX_DEBUG
 -D_GLIBCXX_DEBUG_PEDANTIC
+-I/usr/include/c++/11
+-I/usr/include/x86_64-linux-gnu/c++/11
+-I/usr/include/c++/11/backward
+-I/usr/lib/gcc/x86_64-linux-gnu/11/include
+-I/usr/local/include
+-I/usr/include/x86_64-linux-gnu
+-I/usr/include

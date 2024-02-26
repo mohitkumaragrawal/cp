@@ -16,51 +16,37 @@ using namespace std;
 // clang-format off
 template <typename T> ostream &operator<<(ostream &out, const vector<T> &v) { for (const auto &x : v) out << x << ' '; return out; }
 template <typename T> istream &operator>>(istream &in, vector<T> &v) { for (auto &x : v) in >> x; return in; }
-// clang-format on 
+// clang-format on
 
 using ll = long long;
 using lld = long double;
 using pll = pair<ll, ll>;
 using pii = pair<int, int>;
 
-int val(string s) {
-  int last_one = -10;
-  int n = s.size(), ans = 0;
-  for (int i = 0; i < n; ++i) {
-    if (s[i] == '1') {
-      if ((i - last_one) > 1) {
-        last_one = i + 1;
-        ans++;
-      }
-    }
-  }
-  return ans;
-}
-
 void solve(ll _t) {
   ll n;
   cin >> n;
 
-  string s;
-  cin >> s;
+  vector<ll> a(n);
+  cin >> a;
 
-  ll ans = 0;
+  ll k;
+  cin >> k;
 
-  vector<int> dp(n, 0);
-  int bad = 0;
-  auto f = [&](int i) -> int {
-    if (i < 0) return 0;
-    return dp[i];
-  };
+  for (ll i = 1; i <= k; ++i) {
+    bool ok = true;
+    for (ll x : a) {
+      if (__gcd(x, i) != 1) {
+        ok = false;
+        break;
+      }
+    }
 
-  for (int i = 0; i < n; ++i) {
-    if (s[i] == '1') {
-      dp[i] = (i + 1) - f(i - 1) - f(i - 2);
-      ans += dp[i] * 1LL * (n - i);
+    if (ok) {
+      cout << i << " ";
     }
   }
-
-  cout << ans << endl;
+  cout << endl;
 }
 
 int main() {
